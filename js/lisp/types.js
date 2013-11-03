@@ -59,7 +59,7 @@
 	}
 	LSymbol.prototype = new LAtom();
 	LSymbol.prototype.toString = function(){
-			return "\'"+this.value;
+			return ""+this.value;
 		}	
 
 	// String

@@ -27,7 +27,7 @@ describe("Tokenizer", function(){
 
   it('should deal with quotes', function(){
     var tokenized = Lisp.parser.tokenize('\'(x y z)');
-    var expected = ["'", "(", "x", "y", "z", ")"];
+    var expected = ["\'", "(", "x",  "y",  "z", ")"];
     expect(tokenized).toEqual(expected);
   });
 
@@ -54,8 +54,17 @@ describe("Reader", function(){
     expect(parsed).toBe(Lisp.False);
   });
 
-  it('should parse Number', function(){
+  it('should parse Integer as Number', function(){
     var parsed = Lisp.parser.read(['1']);
-    expect(parsed).toEqual(new Lisp.Number(1));
+    expect(parsed.value).toEqual(1);
+    expect(parsed.toString()).toEqual("1");
   });
+
+  it('should parse Floats as Number', function(){
+    var parsed = Lisp.parser.read(['3.14159265359']);
+    expect(parsed.value).toEqual(3.14159265359);
+    expect(parsed.toString()).toEqual("3.14159265359");
+  });
+
+  // TODO: quoted
 });

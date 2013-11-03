@@ -81,12 +81,12 @@ describe("Types", function(){
   describe("Symbol", function(){
 
     it("is initialized correctly", function() {
-      a = new Lisp.Symbol("test symbol"); 
-      expect(a.value).toEqual("test symbol");
+      a = new Lisp.Symbol("abc"); 
+      expect(a.value).toEqual("abc");
     });
 
     it("is converted to string correctly", function() {
-      expect("" + a).toEqual("\'test symbol");   
+      expect("" + a).toEqual("abc");   
     });
 
     it("is of type Symbol", function() {
@@ -99,12 +99,12 @@ describe("Types", function(){
   describe("String", function(){
 
     it("is initialized correctly", function() {
-      a = new Lisp.String("test string"); 
-      expect(a.value).toEqual("test string");
+      a = new Lisp.String("(test ( a ) string)"); 
+      expect(a.value).toEqual("(test ( a ) string)");
     });
 
     it("is converted to string correctly", function() {
-      expect("" + a).toEqual("test string");   
+      expect("" + a).toEqual("(test ( a ) string)");   
     });
 
     it("is of type String", function() {

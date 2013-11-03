@@ -60,7 +60,6 @@
      var val = parseFloat(token);
      if (!isNaN(val)) return new Lisp.Number(val);
 
-
      // Else it is a symbol
      return new Lisp.Symbol(token);
   }
