@@ -65,14 +65,31 @@ describe("Stringscanner", function(){
 
     expect(stringscanner.matches("ist")).toEqual(false);
 
-    stringscanner.until("ist");
+    stringscanner.until(["ein", "ist"]);
 
-    expect(stringscanner.matches("ist")).toEqual(false);
+    expect(stringscanner.matches("ist")).toEqual(true);
+
+    stringscanner.until(["gibtsnicht"]);
   });
 
-  // it('consumes words', function(){
-  //   var string = "dies ist \n  ein Test";
-  //   var stringscanner = new Lisp.Stringscanner(string);  
-  //   fail();  
-  // });
+  it('consumes substrings', function(){
+    var string = "dies ist \n  ein Test";
+    var stringscanner = new Lisp.Stringscanner(string);  
+    
+    expect(function() { stringscanner.consume("wurst"); }).toThrow("Unexpected: d - Expected: wurst");
+
+    expect(stringscanner.matches("dies")).toEqual(true);
+
+    stringscanner.consume("dies");
+
+    expect(stringscanner.matches("dies")).toEqual(false);
+
+    stringscanner.skipWhitespace();
+
+    expect(stringscanner.matches("ist")).toEqual(true);
+
+    stringscanner.consume("i");
+
+    expect(stringscanner.matches("st")).toEqual(true);
+  });
 });

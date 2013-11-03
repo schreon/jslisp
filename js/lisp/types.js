@@ -17,7 +17,12 @@
 	LNumber.prototype = new LAtom();
 
 	// Nil
-	function LNil() {}
+	var nil;
+	function LNil() {
+		this.type = "Nil";
+		if (!nil) nil = this;
+		return nil;
+	}
 	LNil.prototype = new LAtom();
 	LNil.prototype.toString = function(){
 			return "\'()"		
@@ -52,10 +57,12 @@
 			return "#<procedure:"+this.name+">";
 		};
 
-	// Symbol
-	// TODO - environments? identity?
-	function LSymbol(val) {		
+	// Symbol - these are singletons!
+	var symbols = {};
+	function LSymbol(val) {
+		if (symbols.hasOwnProperty(val)) return symbols[val];		
 		this.value = val;
+		symbols[val] = this;
 	}
 	LSymbol.prototype = new LAtom();
 	LSymbol.prototype.toString = function(){
@@ -71,6 +78,31 @@
 			return ""+this.value;
 		}	
 
+	// List
+	function LList(first, rest) {
+		this.type = "List";
+
+		this[0] = first;
+		this[1] = rest;
+
+		var self = this;
+
+		this.first = function() {
+			return self[0];
+		}
+
+		this.rest = function() {
+			return self[1];
+		}
+
+		this.toString = function(child) {
+			if (child) 
+				pass
+			else
+				return "("+self.first()+" . "+self.rest(true)+")";
+		}
+	}
+
 	if (!window.Lisp) window.Lisp = {};
 	window.Lisp.Atom = LAtom;
 	window.Lisp.Number = LNumber;
@@ -80,5 +112,6 @@
 	window.Lisp.Procedure = LProcedure;
 	window.Lisp.Symbol = LSymbol;
 	window.Lisp.String = LString;
+	window.Lisp.List = LList;
 
 })(window)

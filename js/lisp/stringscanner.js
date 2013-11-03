@@ -43,13 +43,28 @@ var Stringscanner = function(string) {
       }
     }
 
+    // Seeks until it matches one of search
+    function until(search) {
+      while (!matches(search) && cursor < string.length) cursor++;
+    }
+
+    // Consumes the expected string, else throws an error
+    function consume(consumestring) {
+      if (!matches(consumestring))
+        throw "Unexpected: " + peek() +" - Expected: " + consumestring;
+
+      cursor += consumestring.length;
+    }
+
     // Return object with public functions
     return {
       peek : peek,
       next : next,
       matches : matches,
       end : end,
-      skipWhitespace : skipWhitespace
+      skipWhitespace : skipWhitespace,
+      until : until,
+      consume : consume
     }
 }
 

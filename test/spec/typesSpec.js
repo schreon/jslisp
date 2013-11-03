@@ -93,7 +93,12 @@ describe("Types", function(){
       expect(a instanceof Lisp.Symbol).toEqual(true);
     });
 
-    // TODO: Identity in environments?
+    it("creates only one identical instance of a Symbol", function() {
+      var a = new Lisp.Symbol("abc"); 
+      var b = new Lisp.Symbol("abc"); 
+
+      expect(a).toBe(b);
+    });
   });
 
   describe("String", function(){
@@ -143,18 +148,35 @@ describe("Types", function(){
     });
   });
 
-  // describe("Cons", function(){
-  //   var a;
+  describe("List", function(){
+    var l, a, b;
 
-  //   it("is initialized correctly", function() {
-  //     a = new Lisp.Cons(new Lisp.Number(1), new Lisp.Number(2)); 
-  //     expect(a.first).toEqual(new Lisp.Number(1));
-  //     expect(a.rest).toEqual(new Lisp.Number(2));
-  //   });
+    it("is initialized correctly", function() {
+      a = new Lisp.Number(1);
+      b = new Lisp.Number(2);
 
-  //   it("is converted to string correctly", function() {
-  //     expect("" + a).toEqual("test string");   
-  //   });
-  // });
+      l = new Lisp.List(a, b); 
+
+      expect(l.first()).toBe(a);
+      expect(l.rest()).toBe(b);
+    });
+
+    it("is converted to string correctly", function() {
+      a = new Lisp.Number(1);
+      b = new Lisp.Number(2);
+      c = new Lisp.Number(3);
+      d = new Lisp.Number(4);
+
+      l = new Lisp.List(a, b); 
+      m = new Lisp.List(c, d); 
+      n = new Lisp.List(l, m);
+      o = new Lisp.List(a, new Lisp.List(b, new Lisp.List(c, d)));
+
+      expect("" + l).toEqual("(1 . 2)");   
+      expect("" + m).toEqual("(3 . 4)");
+      expect("" + n).toEqual("((1 . 2) 3 . 4)");
+      expect("" + o).toEqual("(1 2 3 . 4)")
+    });
+  });
 
 });
