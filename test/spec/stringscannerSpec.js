@@ -69,15 +69,18 @@ describe("Stringscanner", function(){
     expect(stringscanner.matches("Dies nicht mehr!")).toEqual(true);
   });
 
-  it('seeks until the next match is found', function() {
+  it('captures until the next match is found', function() {
     var string = "   dies ist \n  ein Test";
     var stringscanner = new Lisp.Stringscanner(string); 
 
+    stringscanner.skipWhitespace();
+
     expect(stringscanner.matches("ist")).toEqual(false);
 
-    stringscanner.until(["ein", "ist"]);
+    var capture = stringscanner.until(["ein", "ist"]);
 
     expect(stringscanner.matches("ist")).toEqual(true);
+    expect(capture).toEqual("dies ");
 
     stringscanner.until(["gibtsnicht"]);
   });

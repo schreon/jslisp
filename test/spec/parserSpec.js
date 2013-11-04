@@ -8,15 +8,51 @@ describe("Parser", function(){
   });
 
   it('parses True', function(){
-    var input = "true";
+    var input = " true  ";
     var parser = new Lisp.Parser(input);
     var parsed = parser.read();
     expect(parsed instanceof Lisp.True).toEqual(true);
 
-    // var input = "#t";
-    // var parser = new Lisp.Parser(input);
-    // var parsed = parser.read();
-    // expect(parsed instanceof Lisp.True).toEqual(true);
+    var input = "  #t    ";
+    var parser = new Lisp.Parser(input);
+    var parsed = parser.read();
+    expect(parsed instanceof Lisp.True).toEqual(true);
+  });
+
+  it('parses False', function(){
+    var input = " false  ";
+    var parser = new Lisp.Parser(input);
+    var parsed = parser.read();
+    expect(parsed instanceof Lisp.False).toEqual(true);
+
+    var input = "  #f    ";
+    var parser = new Lisp.Parser(input);
+    var parsed = parser.read();
+    expect(parsed instanceof Lisp.False).toEqual(true);
+  });
+
+  it('parses Nil', function(){
+    var input = " nil  ";
+    var parser = new Lisp.Parser(input);
+    var parsed = parser.read();
+    expect(parsed instanceof Lisp.Nil).toEqual(true);
+  });
+
+  it('reads Strings', function(){
+    var input = "  \"Guten Tag!\"  ";
+    var parser = new Lisp.Parser(input);
+    var parsed = parser.read();
+    expect(parsed instanceof Lisp.String).toEqual(true);
+    expect(parsed.value).toEqual("Guten Tag!");
+  });
+
+  it('reads Lists', function(){
+    var input = "  (a 2)  ";
+    var parser = new Lisp.Parser(input);
+    var parsed = parser.read();
+    expect(parsed instanceof Lisp.List).toEqual(true);
+    expect(parsed.first instanceof Lisp.Atom).toEqual(true);
+    expect(parsed.rest instanceof Lisp.Number).toEqual(true);
   });
 
   // it('should parse False', function(){

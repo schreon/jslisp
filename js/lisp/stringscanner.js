@@ -51,7 +51,10 @@ var Stringscanner = function(string) {
 
     // Seeks until it matches one of search
     function until(search) {
+      var start = cursor;
       while (!matches(search) && cursor < string.length) cursor++;
+      var end = cursor;
+      return string.substring(start, end);
     }
 
     // Consumes the expected string, else throws an error

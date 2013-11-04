@@ -4,21 +4,60 @@
   var Stringscanner = Lisp.Stringscanner;
   
   var WHITESPACE = [" ", "\n", "\t"];
+  var ATOMEND = WHITESPACE.concat(['(', ')']);
+
+
 
   var Parser = function(input) {
     var scanner = new Stringscanner(input);
 
+    // Reads an atom and returns a new Lisp Object
+    function readAtom() {
+      var atom = scanner.until(ATOMEND);
+
+      if((atom === 'true') || (atom === '#t')) {
+        return new Lisp.True();
+      }
+
+      if((atom === 'false') || (atom === '#f')) {
+        return new Lisp.False();
+      }
+
+      if(atom === 'nil') {
+        return new Lisp.Nil();
+      }
+
+      if(atom.match(/^[\+\-]?((\d+)|(\d+\.\d*)|(\d*\.\d+))$/))
+        return new Lisp.Number(atom);
+
+      else throw("Unexpected Atom: "+atom);
+    }
+
+    function readString() {
+      scanner.consume("\"");
+      var value = scanner.until("\"");
+      scanner.consume("\"");
+      return new Lisp.String(value);
+    }
+
+    function readList() {
+
+    }
+    
+    // Public read function
     function read() {
       // Skip whitespace
       scanner.skipWhitespace();
 
-      scanner.print();
-      
-      if(scanner.matches("true")) {
-        scanner.consume("true");
-        return new Lisp.True();
-      }
+      if (scanner.matches("\"")) return readString();
+
+      if (scanner.matches("(")) return readList();
+
+      // If nothing else matches, read Atom
+      return readAtom();
     }
+
+
     // Return Object with public functions
     return {
       read : read
