@@ -15,20 +15,28 @@
     function readAtom() {
       var atom = scanner.until(ATOMEND);
 
+      // True
       if((atom === 'true') || (atom === '#t')) {
         return new Lisp.True();
       }
 
+      // False
       if((atom === 'false') || (atom === '#f')) {
         return new Lisp.False();
       }
 
+      // Nil
       if(atom === 'nil') {
         return new Lisp.Nil();
       }
 
+      // Number
       if(atom.match(/^[\+\-]?((\d+)|(\d+\.\d*)|(\d*\.\d+))$/))
         return new Lisp.Number(atom);
+
+      // Symbol
+      if(atom.match(/[^\s\(\)\,]+/))
+        return new Lisp.Symbol(atom);
 
       else throw("Unexpected Atom: "+atom);
     }
@@ -41,9 +49,19 @@
     }
 
     function readList() {
+      scanner.consume("(");
 
+      var first = read();
+      var second = read();
+      var third = read();
+
+      scanner.consume(")");
+
+      var rest = new Lisp.List(second, third);
+
+      return new Lisp.List(first, rest);
     }
-    
+
     // Public read function
     function read() {
       // Skip whitespace

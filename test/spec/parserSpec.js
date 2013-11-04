@@ -46,13 +46,16 @@ describe("Parser", function(){
     expect(parsed.value).toEqual("Guten Tag!");
   });
 
-  it('reads Lists', function(){
-    var input = "  (a 2)  ";
+  it('reads a List', function(){
+    var input = "  (a 1 2)  ";
     var parser = new Lisp.Parser(input);
     var parsed = parser.read();
+    console.log("" + parsed);
     expect(parsed instanceof Lisp.List).toEqual(true);
-    expect(parsed.first instanceof Lisp.Atom).toEqual(true);
-    expect(parsed.rest instanceof Lisp.Number).toEqual(true);
+    expect(parsed.first() instanceof Lisp.Atom).toEqual(true);
+    expect(parsed.rest() instanceof Lisp.List).toEqual(true);
+    expect(parsed.rest().first() instanceof Lisp.Number).toEqual(true);
+    expect(parsed.rest().rest() instanceof Lisp.Number).toEqual(true);
   });
 
   // it('should parse False', function(){
