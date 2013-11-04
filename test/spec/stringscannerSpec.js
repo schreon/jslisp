@@ -59,6 +59,16 @@ describe("Stringscanner", function(){
     expect(stringscanner.matches("dies")).toEqual(true);
   });
 
+  it('skips a comment', function(){
+    var string = ";dies ist ein Kommentar \n Dies nicht mehr!";
+    var stringscanner = new Lisp.Stringscanner(string); 
+
+    expect(stringscanner.matches("Dies nicht mehr!")).toEqual(false);
+    stringscanner.skipComment();
+    stringscanner.skipWhitespace();
+    expect(stringscanner.matches("Dies nicht mehr!")).toEqual(true);
+  });
+
   it('seeks until the next match is found', function() {
     var string = "   dies ist \n  ein Test";
     var stringscanner = new Lisp.Stringscanner(string); 
@@ -73,23 +83,25 @@ describe("Stringscanner", function(){
   });
 
   it('consumes substrings', function(){
-    var string = "dies ist \n  ein Test";
+    var string = "true false nil";
     var stringscanner = new Lisp.Stringscanner(string);  
     
-    expect(function() { stringscanner.consume("wurst"); }).toThrow("Unexpected: d - Expected: wurst");
+    expect(function() { stringscanner.consume("wurst"); }).toThrow("Unexpected: t - Expected: wurst");
 
-    expect(stringscanner.matches("dies")).toEqual(true);
+    expect(stringscanner.matches("true")).toEqual(true);
 
-    stringscanner.consume("dies");
+    stringscanner.consume("true");
 
-    expect(stringscanner.matches("dies")).toEqual(false);
+    expect(stringscanner.matches("false")).toEqual(false);
 
     stringscanner.skipWhitespace();
 
-    expect(stringscanner.matches("ist")).toEqual(true);
+    expect(stringscanner.matches("false")).toEqual(true);
+    stringscanner.consume("false");
 
-    stringscanner.consume("i");
+    stringscanner.skipWhitespace();
 
-    expect(stringscanner.matches("st")).toEqual(true);
+    expect(stringscanner.matches("nil")).toEqual(true);
+    stringscanner.consume("nil");
   });
 });

@@ -1,9 +1,10 @@
 (function(window){
-
+	"use strict";
+	
 	var LAtom = function() {}
 
 	function LNumber(value) {
-		
+		this.type = "Number";
 		var self = this;
 		self.value = value;
 		self.toString = function(){
@@ -19,24 +20,29 @@
 	// Nil
 	var nil;
 	function LNil() {
+
 		this.type = "Nil";
 		if (!nil) nil = this;
 		return nil;
 	}
 	LNil.prototype = new LAtom();
 	LNil.prototype.toString = function(){
-			return "\'()"		
+			return "()"		
 		}	
 
 	// True
-	function LTrue() {}
+	function LTrue() {
+		this.type="True";
+	}
 	LTrue.prototype = new LAtom();
 	LTrue.prototype.toString = function(){
 			return "#t"		
 		}	
 
 	// False
-	function LFalse() {}
+	function LFalse() {
+		this.type="False";
+	}
 	LFalse.prototype = new LAtom();
 	LFalse.prototype.toString = function(){
 			return "#f"		
@@ -44,6 +50,7 @@
 
 	// Procedure
 	function LProcedure(name, returnType, func) {
+		this.type = "Procedure"
 		this.name = name;
 		this.returnType = returnType;
 		this.func = func;
@@ -60,6 +67,7 @@
 	// Symbol - these are singletons!
 	var symbols = {};
 	function LSymbol(val) {
+		this.type = "Symbol";
 		if (symbols.hasOwnProperty(val)) return symbols[val];		
 		this.value = val;
 		symbols[val] = this;
@@ -70,7 +78,8 @@
 		}	
 
 	// String
-	function LString(val) {		
+	function LString(val) {	
+		this.type = "String";	
 		this.value = val;
 	}
 	LString.prototype = new LAtom();
@@ -95,11 +104,27 @@
 			return self[1];
 		}
 
-		this.toString = function(child) {
-			if (child) 
-				pass
+		this.toString = function(is_inner, is_rest) {
+			var first = self.first();
+			var rest = self.rest();
+
+			var rest_is_list = (rest.type === "List");			
+			var rest_is_nil = (rest.type === "Nil");
+
+			var s = "";
+			if ((!rest_is_list || !is_inner) && !is_rest) s += "(";
+
+			s += first.toString(true);
+			if (!rest_is_list && !rest_is_nil)
+				s += " . ";
 			else
-				return "("+self.first()+" . "+self.rest(true)+")";
+				s += " ";
+
+			s += rest.toString(true, rest_is_list);
+
+			if ((!rest_is_list || !is_inner) && !is_rest)  s += ")";
+			
+			return s;
 		}
 	}
 

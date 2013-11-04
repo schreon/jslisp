@@ -1,4 +1,5 @@
-(function(){
+(function(window){
+"use strict";
 
 var WHITESPACE = [' ', '\n', '\t'];
 
@@ -22,7 +23,7 @@ var Stringscanner = function(string) {
       var searchstring;
       for (var i=0; i < search.length; i++) {
         searchstring = search[i];
-        if (string.substring(cursor, cursor+searchstring.length) == searchstring)
+        if (string.substring(cursor, cursor+searchstring.length) === searchstring)
           return true;
       }
 
@@ -37,9 +38,14 @@ var Stringscanner = function(string) {
     }
 
     // Move cursor to the next non-whitespace character
-    function skipWhitespace() {
-      if (matches(peek(), WHITESPACE)) {
-        while (matches(next(), WHITESPACE)) {};
+    function skipWhitespace() {      
+      while (matches(WHITESPACE)) { cursor += 1 };      
+    }
+
+    // Skip comment until linebreak
+    function skipComment() {
+      if (peek() === ';') {
+        while (!matches("\n")) { cursor += 1 }
       }
     }
 
@@ -50,7 +56,7 @@ var Stringscanner = function(string) {
 
     // Consumes the expected string, else throws an error
     function consume(consumestring) {
-      if (!matches(consumestring))
+      while (!matches(consumestring))
         throw "Unexpected: " + peek() +" - Expected: " + consumestring;
 
       cursor += consumestring.length;
@@ -63,8 +69,12 @@ var Stringscanner = function(string) {
       matches : matches,
       end : end,
       skipWhitespace : skipWhitespace,
+      skipComment : skipComment,
       until : until,
-      consume : consume
+      consume : consume,
+      print : function() {
+        console.log(string.substring(cursor, string.length));
+      }
     }
 }
 

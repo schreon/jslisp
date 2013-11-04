@@ -41,7 +41,7 @@ describe("Types", function(){
     });
 
     it("is converted to string correctly", function() {
-      expect("" + a).toEqual("\'()");   
+      expect("" + a).toEqual("()");   
     });
 
     it("is of type Nil", function() {
@@ -167,14 +167,24 @@ describe("Types", function(){
       c = new Lisp.Number(3);
       d = new Lisp.Number(4);
 
+      // (cons 1 2)
       l = new Lisp.List(a, b); 
+
+      // (cons 3 4)
       m = new Lisp.List(c, d); 
+
+      // (cons (cons 1 2) (cons 3 4))
       n = new Lisp.List(l, m);
+
+      // (cons 1 (cons 2 (cons 3 4)))
       o = new Lisp.List(a, new Lisp.List(b, new Lisp.List(c, d)));
 
-      expect("" + l).toEqual("(1 . 2)");   
+      expect("" + l).toEqual("(1 . 2)");  
+
       expect("" + m).toEqual("(3 . 4)");
+
       expect("" + n).toEqual("((1 . 2) 3 . 4)");
+
       expect("" + o).toEqual("(1 2 3 . 4)")
     });
   });
