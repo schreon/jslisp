@@ -1,6 +1,6 @@
 (function(window){
 	"use strict";
-	
+
 	var LAtom = function() {}
 
 	function LNumber(value) {
@@ -128,6 +128,14 @@
 		}
 	}
 
+	function LQuoted(value) {
+		this.type = "Quoted";
+
+		this.value = value;
+
+		this.toString = value.toString;
+	}
+
 	if (!window.Lisp) window.Lisp = {};
 	window.Lisp.Atom = LAtom;
 	window.Lisp.Number = LNumber;
@@ -138,5 +146,6 @@
 	window.Lisp.Symbol = LSymbol;
 	window.Lisp.String = LString;
 	window.Lisp.List = LList;
+	window.Lisp.Quoted = LQuoted;
 
 })(window)

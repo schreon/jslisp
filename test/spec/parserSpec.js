@@ -50,13 +50,33 @@ describe("Parser", function(){
     var input = "  (a 1 2)  ";
     var parser = new Lisp.Parser(input);
     var parsed = parser.read();
-    console.log("" + parsed);
+
     expect(parsed instanceof Lisp.List).toEqual(true);
     expect(parsed.first() instanceof Lisp.Atom).toEqual(true);
     expect(parsed.rest() instanceof Lisp.List).toEqual(true);
     expect(parsed.rest().first() instanceof Lisp.Number).toEqual(true);
     expect(parsed.rest().rest() instanceof Lisp.Number).toEqual(true);
   });
+
+  it('reads Quoted Atom', function(){
+    var input = "'  test";
+    var parser = new Lisp.Parser(input);
+    var parsed = parser.read();
+    expect(parsed instanceof Lisp.Quoted).toEqual(true);
+    expect(parsed.value instanceof Lisp.Symbol).toEqual(true);
+    expect("" + parsed.value).toEqual("test");
+    expect("" + parsed).toEqual("test");
+  });
+
+  // it('reads Quoted List', function(){
+  //   var input = "'  ( Guten Tag  )";
+  //   var parser = new Lisp.Parser(input);
+  //   var parsed = parser.read();
+  //   expect(parsed instanceof Lisp.Quoted).toEqual(true);
+  //   expect(parsed.value instanceof Lisp.List).toEqual(true);
+  //   expect("" + parsed.value).toEqual("(Guten Tag)");
+  //   expect("" + parsed).toEqual("(Guten Tag)");
+  // });
 
   // it('should parse False', function(){
   //   var parsed = Lisp.parser.read(['false']);

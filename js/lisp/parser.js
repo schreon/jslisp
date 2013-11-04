@@ -6,8 +6,6 @@
   var WHITESPACE = [" ", "\n", "\t"];
   var ATOMEND = WHITESPACE.concat(['(', ')']);
 
-
-
   var Parser = function(input) {
     var scanner = new Stringscanner(input);
 
@@ -31,7 +29,7 @@
       }
 
       // Number
-      if(atom.match(/^[\+\-]?((\d+)|(\d+\.\d*)|(\d*\.\d+))$/))
+      if(atom.match(/(\d+\.\d*)|^[\+\-]?((\d+)|(\d*\.\d+))$/))
         return new Lisp.Number(atom);
 
       // Symbol
@@ -62,6 +60,12 @@
       return new Lisp.List(first, rest);
     }
 
+    function readQuoted() {
+      scanner.consume("'");
+      var content = read();
+      return new Lisp.Quoted(content);
+    }
+
     // Public read function
     function read() {
       // Skip whitespace
@@ -70,6 +74,8 @@
       if (scanner.matches("\"")) return readString();
 
       if (scanner.matches("(")) return readList();
+
+      if (scanner.matches("'")) return readQuoted();
 
       // If nothing else matches, read Atom
       return readAtom();
