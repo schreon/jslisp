@@ -1,6 +1,6 @@
 describe("Stringscanner", function(){
 
-  it('does create a new stringscanner', function(){
+  it('does initialize correctly', function(){
     var string = "";
     var stringscanner = new Lisp.Stringscanner(string);
   });
@@ -13,7 +13,7 @@ describe("Stringscanner", function(){
     }
   });
 
-  it('does traverse the string using the next method', function(){
+  it('does traverse a string using the next method', function(){
     var string = "dies ist \n  ein Test";
     var stringscanner = new Lisp.Stringscanner(string);
     for (var i = 0; i < string.length; i++) {
